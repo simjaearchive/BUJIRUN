@@ -256,7 +256,7 @@ function viewPersonRank(){
 }
 function viewTeacherRank(){
   const rows = teacherRanking().slice(0,10);
-  return `<h2 class="sec">👩‍🏫 선생님 기록 순위 <span class="small">TOP 10 · 총 거리 순</span></h2>
+  return `<h2 class="sec">👩‍🏫 선생님 기록 순위 <span class="small">TOP 10 · 총 거리 순 · 동점은 참여횟수</span></h2>
     <div class="card">${rows.length?`<table><thead><tr><th>순위</th><th class="l">선생님</th><th>소속</th><th>총 거리</th><th>참여횟수</th></tr></thead><tbody>
     ${rows.map(r=>`<tr class="${r.rank===1?"top1":""}"><td class="rk"><span class="medal">${medal(r.rank)}</span> ${r.rank}</td>
       <td class="l"><b>${esc(r.t.name)}</b></td><td>${r.t.hr?`${r.t.g}학년 ${r.t.c}반 담임`:"교직원"}</td><td class="score">${fmt(r.km)}km</td><td>${r.cnt}회</td></tr>`).join("")}
