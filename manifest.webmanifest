@@ -1,0 +1,13 @@
+{
+  "name": "방이중 부지RUN",
+  "short_name": "부지RUN",
+  "description": "2026학년도 방이중학교 부지RUN 기록실",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff7ec",
+  "theme_color": "#ffb48f",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
