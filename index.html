@@ -23,7 +23,7 @@ header::after{width:90px;height:90px;right:140px;bottom:20px}
 .wrap{max-width:1200px;margin:0 auto;position:relative;z-index:1}
 header h1{margin:0;font-size:clamp(12px,3.8vw,26px);white-space:nowrap;letter-spacing:-.3px;text-shadow:0 2px 0 rgba(200,100,60,.25)}
 .brand{display:inline-block;font-size:1.35em;color:#fff;background:linear-gradient(135deg,#ff7e5f,#ff9b7a);padding:0 .5em;border-radius:999px;margin:0 2px;text-shadow:0 2px 0 rgba(180,70,40,.35);box-shadow:0 4px 0 rgba(200,90,50,.35);transform:rotate(-2deg)}
-header p{margin:4px 0 14px;font-size:13px;opacity:.95;text-shadow:0 1px 0 rgba(200,100,60,.2)}
+header p{margin:8px 0 14px;font-size:13.5px;color:#7a4a32;font-weight:700;background:rgba(255,255,255,.7);display:inline-block;padding:6px 14px;border-radius:14px;line-height:1.5}
 .tabs{display:flex;gap:6px}
 .tab{flex:1;max-width:150px;border:0;background:rgba(255,255,255,.35);color:#fff;padding:11px 0;font-size:16px;border-radius:18px 18px 0 0;cursor:pointer}
 .tab.on{background:var(--bg);color:var(--pri-d)}
@@ -67,7 +67,7 @@ tr.top1 td:first-child{border-radius:12px 0 0 12px}tr.top1 td:last-child{border-
 .small{font-size:12px;color:var(--mute)}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--pri-d);color:#fff;padding:10px 20px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.2s;box-shadow:var(--shadow)}
 #toast.on{opacity:.96}
-.sync{display:block;font-size:12px;opacity:.95;margin-top:2px}
+.sync{display:block;font-size:12.5px;color:#c4573a;font-weight:700;margin-top:2px}
 .rank-scroll{max-height:455px;overflow-y:auto}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
 .sec{font-size:21px;margin:10px 2px 12px;color:var(--pri-d)}.sec .small{font-family:"Gowun Dodum",sans-serif;margin-left:8px}
@@ -90,7 +90,7 @@ tr.top1 td:first-child{border-radius:12px 0 0 12px}tr.top1 td:last-child{border-
 
 <script>
 /* ===== 설정 ===== */
-const ADMIN_PW = "05080";          // 관리자 비밀번호 (배포 전 변경하세요)
+const ADMIN_PW = "05080!";          // 관리자 비밀번호 (배포 전 변경하세요)
 const DB_URL   = "https://bujirun-5dec9-default-rtdb.firebaseio.com";               // 여러 기기 공유 시 Firebase Realtime Database 주소 (예: https://xxxx-default-rtdb.firebaseio.com). 비우면 이 기기(브라우저)에만 저장
 const DATES = ["2026-11-09","2026-11-10","2026-11-11","2026-11-12","2026-11-13","2026-11-16","2026-11-17"];
 const DOW = ["일","월","화","수","목","금","토"];
@@ -197,7 +197,7 @@ const medal = r => r===1?"🥇":r===2?"🥈":r===3?"🥉":"";
 function ss(op,v){ try{ if(op==="get") return sessionStorage.getItem("bujirun_adm"); if(op==="set") sessionStorage.setItem("bujirun_adm",v); else sessionStorage.removeItem("bujirun_adm"); }catch(e){} }
 const today = new Date().toISOString().slice(0,10);
 const ui = {
-  top:"rec", adm:"input",
+  top:"rec", sub:"class", adm:"input",
   g:1, c:1, date: DATES.includes(today)?today:DATES[0],
   pQ:"", lim:{1:10,2:10,3:10},
   admOk: ss("get")==="1"
@@ -246,7 +246,9 @@ function viewTeacherRank(){
     </tbody></table>`:`<div class="empty">아직 기록이 없습니다.</div>`}</div>`;
 }
 function viewRecordRoom(){
-  return viewClassRank() + viewPersonRank() + viewTeacherRank();
+  const subs=[["class","🏆 학급별"],["person","🏃 개인별"]];
+  return `<div class="sub">${subs.map(([k,t])=>`<button class="pill ${ui.sub===k?"on":""}" data-sub="${k}">${t}</button>`).join("")}</div>`
+    + (ui.sub==="class"?viewClassRank():viewPersonRank()+viewTeacherRank());
 }
 
 /* ===== 관리자 ===== */
@@ -290,11 +292,12 @@ document.querySelector(".tabs").addEventListener("click",e=>{
   const t=e.target.dataset.t; if(t){ui.top=t;render();}
 });
 app.addEventListener("click",async e=>{
-  const el=e.target.closest("[data-g],[data-c],[data-d],[data-del],[data-adm],button,label"); if(!el) return;
+  const el=e.target.closest("[data-g],[data-c],[data-d],[data-del],[data-sub],[data-adm],button,label"); if(!el) return;
   const D=el.dataset;
   if(D.g){ui.g=+D.g;ui.c=1;}
   else if(D.c) ui.c=+D.c;
   else if(D.d) ui.date=D.d;
+  else if(D.sub) ui.sub=D.sub;
   else if(D.adm) ui.adm=D.adm;
   else if(D.del){
     if(!confirm(`${nameOf(D.del)} 선생님과 기록을 삭제할까요?`)) return;
