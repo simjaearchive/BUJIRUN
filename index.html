@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>방이중 부지RUN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff7ec; --card:#fffdf9; --ink:#6a4f3f; --mute:#a38f80; --line:#f6e6d3;
+  --pri:#ff9b7a; --pri-d:#e8704d; --pri-l:#ffe9df; --mint:#8fdcc0; --mint-l:#e3f7ef; --butter:#fff0b8; --danger:#ef6f6f;
+  --shadow:0 6px 18px rgba(232,160,120,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Gowun Dodum","Pretendard","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+h1,h2,.tab,.pill,.btn,.chip,.rk,.score,.sum b{font-family:"Jua","Gowun Dodum","Malgun Gothic",sans-serif;font-weight:400}
+header{position:relative;overflow:hidden;background:linear-gradient(135deg,#ffb48f,#ffd27a 70%,#fff0b8);color:#fff;padding:20px 16px 0;border-radius:0 0 34px 34px;box-shadow:0 8px 20px rgba(255,170,120,.25)}
+header::before,header::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.25);pointer-events:none}
+header::before{width:150px;height:150px;right:-30px;top:-60px}
+header::after{width:90px;height:90px;right:140px;bottom:20px}
+.wrap{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+header h1{margin:0;font-size:clamp(12px,3.8vw,26px);white-space:nowrap;letter-spacing:-.3px;text-shadow:0 2px 0 rgba(200,100,60,.25)}
+.brand{display:inline-block;font-size:1.35em;color:#fff;background:linear-gradient(135deg,#ff7e5f,#ff9b7a);padding:0 .5em;border-radius:999px;margin:0 2px;text-shadow:0 2px 0 rgba(180,70,40,.35);box-shadow:0 4px 0 rgba(200,90,50,.35);transform:rotate(-2deg)}
+header p{margin:4px 0 14px;font-size:13px;opacity:.95;text-shadow:0 1px 0 rgba(200,100,60,.2)}
+.tabs{display:flex;gap:6px}
+.tab{flex:1;max-width:150px;border:0;background:rgba(255,255,255,.35);color:#fff;padding:11px 0;font-size:16px;border-radius:18px 18px 0 0;cursor:pointer}
+.tab.on{background:var(--bg);color:var(--pri-d)}
+main{max-width:1200px;margin:0 auto;padding:18px 12px 60px}
+.sub{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
+.pill{border:2px solid var(--line);background:#fff;color:var(--mute);padding:7px 16px;border-radius:999px;font-size:15px;cursor:pointer;white-space:nowrap}
+.pill.on{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 4px 10px rgba(255,140,100,.3)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 10px;font-size:18px;color:var(--pri-d)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.lbl{font-size:13px;color:var(--mute);min-width:34px}
+.chip{border:2px solid var(--line);background:#fff;padding:5px 12px;border-radius:999px;font-size:14px;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--mint-l);border-color:var(--mint);color:#3b8f74}
+select,input[type=text],input[type=password]{font:inherit;padding:8px 12px;border:2px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);outline:none}
+select:focus,input:focus{border-color:var(--pri)}
+select.km{min-width:84px;font-weight:700}
+select.km.has{background:var(--mint-l);border-color:var(--mint);color:#3b8f74}
+table{width:100%;border-collapse:separate;border-spacing:0}
+th,td{padding:9px 6px;text-align:center;border-bottom:1px dashed var(--line);font-size:14px}
+th{font-size:12px;color:var(--mute);background:#fff4e4;position:sticky;top:0;font-family:"Jua","Gowun Dodum",sans-serif;font-weight:400}
+th:first-child{border-radius:12px 0 0 12px}th:last-child{border-radius:0 12px 12px 0}
+td.l,th.l{text-align:left;white-space:nowrap}
+td.no{white-space:nowrap}
+tr.top1 td{background:var(--butter)}
+tr.top1 td:first-child{border-radius:12px 0 0 12px}tr.top1 td:last-child{border-radius:0 12px 12px 0}
+.medal{font-size:19px}
+.rk{color:var(--pri-d)}
+.score{color:var(--pri-d);font-size:16px}
+.bar{height:8px;background:#fdeedd;border-radius:6px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#ffb48f,#ff9b7a);border-radius:6px}
+.btn{border:0;background:var(--pri);color:#fff;padding:9px 18px;border-radius:999px;font-size:15px;cursor:pointer;box-shadow:0 4px 10px rgba(255,140,100,.3)}
+.btn.sec{background:#fff;color:var(--pri-d);border:2px solid var(--pri);box-shadow:none}
+.btn.red{background:var(--danger)}
+.note{font-size:12.5px;color:var(--mute);margin:8px 0 0}
+.sum{display:flex;gap:8px;margin-bottom:10px}
+.sum div{flex:1;background:var(--mint-l);border-radius:16px;padding:8px;text-align:center}
+.sum b{display:block;font-size:20px;color:#3b8f74}
+.sum span{font-size:12px;color:var(--mute)}
+.scroll{overflow-x:auto}
+.no{color:var(--mute);font-size:12px;width:22px;text-align:right}
+.small{font-size:12px;color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--pri-d);color:#fff;padding:10px 20px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.2s;box-shadow:var(--shadow)}
+#toast.on{opacity:.96}
+.sync{display:block;font-size:12px;opacity:.95;margin-top:2px}
+.rank-scroll{max-height:455px;overflow-y:auto}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+.sec{font-size:21px;margin:10px 2px 12px;color:var(--pri-d)}.sec .small{font-family:"Gowun Dodum",sans-serif;margin-left:8px}
+@media(max-width:900px){.grid3{grid-template-columns:1fr}}
+.empty{padding:26px;text-align:center;color:var(--mute)}
+@media(max-width:560px){th,td{padding:8px 3px;font-size:13px}.hide-s{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>☀️ 2026학년도 방이중학교 <span class="brand">부지RUN</span> 🏃</h1>
+  <p>11월 9일(월) ~ 11월 17일(화) · 평일 기록 · 0.5km 단위 · 최대 3km<span class="sync" id="sync"></span></p>
+  <div class="tabs">
+    <button class="tab on" data-t="rec">기록실</button>
+    <button class="tab" data-t="adm">관리자</button>
+  </div>
+</div></header>
+<main id="app"></main>
+<div id="toast"></div>
+
+<script>
+/* ===== 설정 ===== */
+const ADMIN_PW = "05080";          // 관리자 비밀번호 (배포 전 변경하세요)
+const DB_URL   = "";               // 여러 기기 공유 시 Firebase Realtime Database 주소 (예: https://xxxx-default-rtdb.firebaseio.com). 비우면 이 기기(브라우저)에만 저장
+const DATES = ["2026-11-09","2026-11-10","2026-11-11","2026-11-12","2026-11-13","2026-11-16","2026-11-17"];
+const DOW = ["일","월","화","수","목","금","토"];
+const KM_OPTIONS = [0.5,1,1.5,2,2.5,3];
+const ROSTER = {"1":{"1":[["강도연","남"],["곽우찬","남"],["김시언","여"],["김시현","여"],["김율리","여"],["김지수","여"],["김태현","남"],["김하윤","남"],["남규민","남"],["박지유","여"],["엄유정","여"],["유지안","남"],["이도영","남"],["이도현","여"],["이승현","남"],["이시연","여"],["이시후","여"],["장채훈","남"],["하정운","남"],["허준원","남"]],"2":[["강단욱","남"],["강석현","남"],["고다현","여"],["박유진","여"],["심해원","여"],["오주환","남"],["유아인","여"],["유하린","여"],["윤지후","남"],["이용민","남"],["이채은","여"],["이한결","남"],["최민정","여"],["최시온","남"],["최지아","여"],["한규성","남"],["한상원","남"],["홍종현","남"],["류재현","남"],["이소예","여"]],"3":[["김고은","여"],["김다경","여"],["김별","여"],["김시윤","여"],["김유영","남"],["김종민","남"],["김준혜","남"],["김지호","여"],["박찬이","남"],["손예서","여"],["손율","남"],["오하울","여"],["이준영","남"],["정도현","남"],["정승하","남"],["정유하","여"],["정의진","남"],["조혜윤","여"],["황보길","남"],["정서현","여"],["강별","여"]],"4":[["고다현","여"],["권준한","남"],["김리나","여"],["김승재","여"],["김재웅","남"],["김재하","남"],["김정우","남"],["박하윤","여"],["서지효","여"],["선우재","남"],["손예린","여"],["심종욱","남"],["오아민","여"],["오은수","남"],["이서준","남"],["전하율","여"],["정시윤","남"],["정이현","남"],["한승호","남"],["한채윤","여"]],"5":[["고은비","여"],["김고은","여"],["김라희","여"],["김진우","남"],["김태영","남"],["문하언","여"],["박세훈","남"],["박지후","남"],["손연서","여"],["신지완","남"],["안서현","여"],["오유진","남"],["윤이상","남"],["이채범","남"],["정민유","여"],["정태민","남"],["조화영","여"],["지현우","남"],["표주원","남"],["허지영","여"],["심윤서","여"]]},"2":{"1":[["곽승윤","남"],["국나윤","여"],["김가현","여"],["김민건","남"],["김민승","남"],["김시후","남"],["김은수","남"],["김지한","남"],["김채현","여"],["김태한","남"],["박도연","여"],["백소율","여"],["신하준","남"],["양홍준","남"],["오윤성","남"],["이다연","여"],["이서영","여"],["이수아","여"],["이준영","남"],["장이은","여"],["최은서","여"],["최지완","남"],["한소율","여"],["김서연","여"],["최시우","남"]],"2":[["고윤서","여"],["김가온","남"],["김건우","남"],["김별","여"],["김승후","남"],["김윤제","남"],["남보라","여"],["박지민","남"],["배서준","남"],["손민성","남"],["신예은","여"],["양해온","여"],["오은아","여"],["원지우","여"],["유은찬","남"],["유충현","남"],["이세움","남"],["이현서","여"],["조하음","여"],["채민수","남"],["채율","남"],["최재우","남"],["홍예령","여"],["윤서준","남"],["이하윤","남"],["심효민","여"]],"3":[["강민준","남"],["권오훈","남"],["김다은","여"],["김도원","여"],["김지한","남"],["김지후","남"],["김태린","여"],["노희경","여"],["두진우","남"],["박소현","여"],["박준혁","남"],["변호연","남"],["서하린","여"],["여아인","여"],["윤율","남"],["이민준","남"],["이민하","여"],["이서윤","여"],["이시연","여"],["이정수","남"],["이한별","여"],["정환석","남"],["최윤우","남"],["황동현","남"],["모지현","여"],["박세연","여"]],"4":[["강다연","여"],["강성진","남"],["강유승","남"],["김서윤","여"],["김해솔","여"],["김효린","여"],["모주환","남"],["박수연","여"],["백선우","남"],["손성오","남"],["양이정","여"],["이설","여"],["이연경","여"],["이은용","남"],["이지우","남"],["이태민","남"],["장동건","남"],["장예성","남"],["전가은","여"],["전효승","남"],["정하영","여"],["조우영","남"],["조윤서","여"],["구캐롤","여"],["김윤슬","여"]],"5":[["김가연","여"],["김주찬","남"],["김지연","여"],["김태연","남"],["류시환","남"],["박가람","여"],["박소영","여"],["박윤재","남"],["박지혜","여"],["박하은","여"],["방현서","남"],["신은수","남"],["신재환","남"],["이서아","여"],["이승빈","남"],["이예준","남"],["이재준","남"],["이정훈","남"],["이지우","남"],["이지원","여"],["조가음","여"],["한태경","남"],["최서아","여"],["송혜원","여"],["김다연","여"]],"6":[["강지혜","여"],["김가람","남"],["김규선","남"],["김민수","남"],["김세은","여"],["김시윤","남"],["김유정","여"],["김현우","남"],["박서하","남"],["서지윤","여"],["서효린","여"],["안원준","남"],["이서영","여"],["이주하","여"],["이해온","여"],["이효윤","여"],["임재헌","남"],["정우성","남"],["주민호","남"],["지민준","남"],["지하엘","남"],["최서윤","여"],["황다연","여"],["박세인","남"],["이수민","여"]]},"3":{"1":[["권동휘","남"],["권민재","남"],["권혁준","남"],["김나윤","여"],["김도헌","남"],["김민재","남"],["김보민","여"],["김수아","여"],["김재은","여"],["김지우","여"],["김태연","여"],["김태준","남"],["남아현","여"],["도혜린","여"],["명세빈","여"],["민찬우","남"],["박규리","여"],["신다솜","여"],["심재윤","남"],["안연규","남"],["이병훈","남"],["이서준","남"],["이우진","남"],["이주현","남"],["임미소","여"],["조현성","남"],["지예서","여"],["최시영","남"],["홍주원","남"],["황희성","남"]],"2":[["구륜하","여"],["김도현","남"],["김동건","남"],["김동혁","남"],["김민하","여"],["김채은","여"],["김희준","남"],["박서희","여"],["박시유","남"],["손세유","남"],["송채령","여"],["신이수","남"],["윤성일","남"],["이민준","남"],["이서주","여"],["이성연","여"],["이시율","남"],["이시은","여"],["이예서","여"],["이준휘","남"],["장경서","여"],["장하율","여"],["정진영","남"],["정현우","남"],["진유진","남"],["차주하","여"],["차혜성","남"],["최준혁","남"],["한라희","여"],["황성훈","남"]],"3":[["강류안","남"],["강민채","여"],["고윤아","여"],["권민아","여"],["김보겸","남"],["김서연","여"],["김시연","여"],["김용찬","남"],["김윤조","남"],["김율아","여"],["김태영","남"],["나준혁","남"],["박세정","여"],["박찬","남"],["신은찬","남"],["양종훈","남"],["오지후","남"],["오채은","여"],["이수민","남"],["이예영","여"],["이유주","여"],["이지우","남"],["임하준","남"],["전남현","남"],["정인우","남"],["정희중","남"],["주지영","여"],["지수아","여"],["황수아","여"],["황태휘","남"]],"4":[["강시후","남"],["김가은","여"],["김려민","남"],["김서준","남"],["김석진","남"],["김요한","남"],["김태우","남"],["박규현","남"],["박하은","여"],["변우주","여"],["설서윤","여"],["송지한","남"],["심유리","여"],["엄태빈","남"],["윤찬우","남"],["이승비","남"],["이용건","남"],["이유빈","여"],["이유찬","남"],["이정원","여"],["이화랑","여"],["임한택","남"],["장시우","남"],["장윤주","여"],["정보미","여"],["정지민","여"],["조태인","남"],["황서은","여"],["황유경","여"],["정준영","남"]],"5":[["김다현","여"],["김다혜","여"],["김신우","남"],["김예찬","남"],["김윤서","여"],["김정엽","남"],["김채민","여"],["김채은","여"],["모리윤","남"],["민채원","여"],["박다연","여"],["박서우","남"],["박준재","남"],["박채이","여"],["복재형","남"],["성지원","남"],["신예빈","여"],["신찬휘","남"],["안준석","남"],["양정원","여"],["이동영","남"],["이예솔","여"],["이유현","남"],["이준재","남"],["이태정","남"],["정지훈","남"],["최현선","여"],["하승민","여"],["한규민","남"],["전예성","여"]]}};
+const HOMEROOM = {1:["박샛별","엄선정","차효인","엄혜령","김한영"], 2:["김혜민","김민지","이성호","이재준","김정우","김현혜"], 3:["박지선","정태승","김성현","전경미","연진영"]};
+const HR_BONUS = 2;   // 담임선생님이 0.5km 이상 기록한 날마다 그 반에 주는 보너스 점수
+
+/* ===== 데이터 ===== */
+const students = [];   // {id,g,c,n,name,sex}
+for (const g in ROSTER) for (const c in ROSTER[g]) ROSTER[g][c].forEach((s,i)=>{
+  students.push({id:`${g}-${c}-${String(i+1).padStart(2,"0")}`,g:+g,c:+c,n:i+1,name:s[0],sex:s[1]});
+});
+const byId = Object.fromEntries(students.map(s=>[s.id,s]));
+const classesOf = g => Object.keys(ROSTER[g]).map(Number);
+const dLabel = d => { const x=new Date(d+"T00:00:00"); return `${x.getMonth()+1}/${x.getDate()}(${DOW[x.getDay()]})`; };
+const esc = t => String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = n => (Math.round(n*10)/10).toString();
+
+let records = {};      // "학생/선생님id_날짜" -> km
+let extra = {};        // 담임 외 선생님 {id: 이름}
+const LS = "bujirun_records_v1", LS_X = "bujirun_extra_v1";
+try { records = JSON.parse(localStorage.getItem(LS)||"{}"); } catch(e){}
+try { extra = JSON.parse(localStorage.getItem(LS_X)||"{}"); } catch(e){}
+const saveLocal = () => { try{ localStorage.setItem(LS, JSON.stringify(records)); localStorage.setItem(LS_X, JSON.stringify(extra)); }catch(e){} };
+const dbUrl = p => DB_URL.replace(/\/$/,"")+p+".json";
+
+const teachers = () => [
+  ...[1,2,3].flatMap(g=>HOMEROOM[g].map((name,i)=>({id:`T${g}-${i+1}`,name,g,c:i+1,hr:true}))),
+  ...Object.entries(extra).map(([id,name])=>({id,name,hr:false}))
+];
+const nameOf = id => (byId[id]||teachers().find(t=>t.id===id)||{}).name||"";
+
+function setSync(t){ document.getElementById("sync").textContent = t; }
+async function loadRemote(){
+  if(!DB_URL) return;
+  try{
+    const [d,x] = await Promise.all([fetch(dbUrl("/records")).then(r=>r.json()), fetch(dbUrl("/teachers")).then(r=>r.json())]);
+    records = d || {}; extra = x || {};
+    saveLocal(); setSync("● 서버 연결됨"); render(true);
+  }catch(e){ setSync("○ 오프라인(이 기기에 저장)"); }
+}
+async function setRecord(sid, date, km){
+  const k = `${sid}_${date}`;
+  if(km>0) records[k]=km; else delete records[k];
+  saveLocal();
+  if(DB_URL){
+    try{
+      await fetch(`${DB_URL.replace(/\/$/,"")}/records/${k}.json`, km>0
+        ? {method:"PUT",body:JSON.stringify(km)} : {method:"DELETE"});
+      setSync("● 서버 연결됨");
+    }catch(e){ setSync("○ 서버 저장 실패"); toast("서버 저장 실패 — 네트워크를 확인하세요"); }
+  }
+}
+async function remote(path, method, body){
+  if(!DB_URL) return;
+  try{ await fetch(dbUrl(path), body===undefined?{method}:{method,body:JSON.stringify(body)}); setSync("● 서버 연결됨"); }
+  catch(e){ setSync("○ 서버 저장 실패"); toast("서버 저장 실패 — 네트워크를 확인하세요"); }
+}
+async function addTeacher(name){
+  const id = "X"+Date.now().toString(36); extra[id]=name; saveLocal(); await remote(`/teachers/${id}`,"PUT",name);
+}
+async function removeTeacher(id){
+  delete extra[id]; await remote(`/teachers/${id}`,"DELETE");
+  for(const d of DATES){ const k=`${id}_${d}`; if(records[k]){ delete records[k]; await remote(`/records/${k}`,"DELETE"); } }
+  saveLocal();
+}
+function stat(sid){
+  let km=0,cnt=0;
+  for(const d of DATES){ const v=records[`${sid}_${d}`]; if(v>0){km+=v;cnt++;} }
+  return {km,cnt};
+}
+const scoreOf = (km,cnt) => km*2 + cnt*5;
+
+/* ===== 순위 계산 ===== */
+function classRanking(g){
+  const rows = classesOf(g).map(c=>{
+    const list = students.filter(s=>s.g===g&&s.c===c);
+    let km=0,cnt=0,part=0;
+    list.forEach(s=>{const t=stat(s.id);km+=t.km;cnt+=t.cnt;if(t.cnt)part++;});
+    const bonus = DATES.filter(d=>records[`T${g}-${c}_${d}`]>0).length * HR_BONUS;
+    return {c,total:list.length,part,km,cnt,bonus,score:scoreOf(km,cnt)+bonus};
+  }).sort((a,b)=>b.score-a.score||b.km-a.km||a.c-b.c);
+  rows.forEach((r,i)=>r.rank = i&&rows[i-1].score===r.score ? rows[i-1].rank : i+1);
+  return rows;
+}
+function personRanking(g,c,q){
+  let rows = students.filter(s=>(!g||s.g===g)&&(!c||s.c===c))
+    .map(s=>({s,...stat(s.id)})).filter(r=>r.cnt>0)
+    .sort((a,b)=>b.km-a.km||b.cnt-a.cnt||a.s.g-b.s.g||a.s.c-b.s.c||a.s.n-b.s.n);
+  rows.forEach((r,i)=>r.rank = i&&rows[i-1].km===r.km&&rows[i-1].cnt===r.cnt ? rows[i-1].rank : i+1);
+  if(q) rows = rows.filter(r=>r.s.name.includes(q));
+  return rows;
+}
+function teacherRanking(){
+  const rows = teachers().map(t=>({t,...stat(t.id)})).filter(r=>r.cnt>0)
+    .sort((a,b)=>b.km-a.km||b.cnt-a.cnt||a.t.name.localeCompare(b.t.name));
+  rows.forEach((r,i)=>r.rank = i&&rows[i-1].km===r.km&&rows[i-1].cnt===r.cnt ? rows[i-1].rank : i+1);
+  return rows;
+}
+const medal = r => r===1?"🥇":r===2?"🥈":r===3?"🥉":"";
+
+/* ===== 화면 상태 ===== */
+function ss(op,v){ try{ if(op==="get") return sessionStorage.getItem("bujirun_adm"); if(op==="set") sessionStorage.setItem("bujirun_adm",v); else sessionStorage.removeItem("bujirun_adm"); }catch(e){} }
+const today = new Date().toISOString().slice(0,10);
+const ui = {
+  top:"rec", adm:"input",
+  g:1, c:1, date: DATES.includes(today)?today:DATES[0],
+  pQ:"", lim:{1:10,2:10,3:10},
+  admOk: ss("get")==="1"
+};
+
+function toast(t){ const e=document.getElementById("toast"); e.textContent=t; e.classList.add("on"); clearTimeout(toast.t); toast.t=setTimeout(()=>e.classList.remove("on"),1400); }
+
+/* ===== 공통 조각 ===== */
+function kmSelect(sid,date){
+  const v = records[`${sid}_${date}`]||0;
+  return `<select class="km ${v?"has":""}" data-sid="${sid}" data-date="${date}">
+    <option value="0">-</option>${KM_OPTIONS.map(k=>`<option value="${k}" ${k===v?"selected":""}>${k.toFixed(1)} km</option>`).join("")}</select>`;
+}
+function gradeClassPicker(){
+  return `<div class="row"><span class="lbl">학년</span>${[1,2,3].map(g=>`<button class="chip ${ui.g===g?"on":""}" data-g="${g}">${g}학년</button>`).join("")}</div>
+  <div class="row"><span class="lbl">학급</span>${classesOf(ui.g).map(c=>`<button class="chip ${ui.c===c?"on":""}" data-c="${c}">${c}반</button>`).join("")}</div>`;
+}
+
+/* ===== 기록실 ===== */
+function viewClassRank(){
+  return `<h2 class="sec">🏆 학급별 순위 <span class="small">점수 = (총 누적거리×2) + (총 참여횟수×5) + 담임선생님 참여 보너스(0.5km 이상 기록한 날마다 +${HR_BONUS}점)</span></h2><div class="grid3">`
+  + [1,2,3].map(g=>{
+    const rows = classRanking(g);
+    const max = Math.max(1,...rows.map(r=>r.score));
+    return `<div class="card"><h2>${g}학년</h2><table><thead><tr><th>순위</th><th>반</th><th>거리</th><th>횟수</th><th>점수</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr class="${r.rank===1&&r.score>0?"top1":""}"><td class="rk"><span class="medal">${r.score>0?medal(r.rank):""}</span> ${r.rank}</td>
+      <td><b>${g}-${r.c}</b></td><td>${fmt(r.km)}km</td><td>${r.cnt}회</td>      <td class="score">${fmt(r.score)}<div class="bar"><i style="width:${r.score/max*100}%"></i></div></td></tr>`).join("")}
+    </tbody></table></div>`;
+  }).join("") + `</div>`;
+}
+function viewPersonRank(){
+  const rows = personRanking(0,0,ui.pQ), shown = rows.slice(0,ui.pQ?50:20);
+  return `<h2 class="sec">🏃 개인별 기록 순위 <span class="small">총 거리 순 · 동점은 참여횟수 · 이름을 검색하면 내 순위 확인</span></h2>
+    <div class="row"><input type="text" id="q" placeholder="🔍 이름 검색" value="${esc(ui.pQ)}"></div>
+    <div class="card">${rows.length?`<div class="rank-scroll"><table><thead><tr><th>순위</th><th class="l">학생</th><th>학년·반</th><th>총 거리</th><th>참여횟수</th></tr></thead><tbody>
+    ${shown.map(r=>`<tr class="${r.rank===1?"top1":""}"><td class="rk"><span class="medal">${medal(r.rank)}</span> ${r.rank}</td>
+      <td class="l"><b>${esc(r.s.name)}</b></td><td>${r.s.g}학년 ${r.s.c}반</td><td class="score">${fmt(r.km)}km</td><td>${r.cnt}회</td></tr>`).join("")}
+    </tbody></table></div>${!ui.pQ&&rows.length>10?`<p class="note" style="text-align:center">↕ 스크롤하면 20위까지 볼 수 있습니다</p>`:""}`:`<div class="empty">${ui.pQ?"검색 결과가 없거나 아직 기록이 없습니다.":"기록이 없습니다."}</div>`}</div>`;
+}
+function viewTeacherRank(){
+  const rows = teacherRanking().slice(0,10);
+  return `<h2 class="sec">👩‍🏫 선생님 기록 순위 <span class="small">TOP 10 · 총 거리 순</span></h2>
+    <div class="card">${rows.length?`<table><thead><tr><th>순위</th><th class="l">선생님</th><th>소속</th><th>총 거리</th><th>참여횟수</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr class="${r.rank===1?"top1":""}"><td class="rk"><span class="medal">${medal(r.rank)}</span> ${r.rank}</td>
+      <td class="l"><b>${esc(r.t.name)}</b></td><td>${r.t.hr?`${r.t.g}학년 ${r.t.c}반 담임`:"교직원"}</td><td class="score">${fmt(r.km)}km</td><td>${r.cnt}회</td></tr>`).join("")}
+    </tbody></table>`:`<div class="empty">아직 기록이 없습니다.</div>`}</div>`;
+}
+function viewRecordRoom(){
+  return viewClassRank() + viewPersonRank() + viewTeacherRank();
+}
+
+/* ===== 관리자 ===== */
+function viewLogin(){
+  return `<div class="card" style="max-width:360px;margin:20px auto"><h2>🔒 관리자 로그인</h2>
+    <div class="row"><input type="password" id="pw" placeholder="비밀번호" style="flex:1"><button class="btn" id="login">확인</button></div></div>`;
+}
+function viewAdminRecords(){
+  const list = students.filter(s=>s.g===ui.g&&s.c===ui.c);
+  return `<div class="card"><h2>기록 입력</h2>${gradeClassPicker()}
+    <div class="scroll"><table><thead><tr><th>번호</th><th class="l">이름</th>${DATES.map(d=>`<th>${dLabel(d)}</th>`).join("")}<th>합계</th></tr></thead><tbody>
+    ${list.map(s=>{const t=stat(s.id);return `<tr><td class="no">${s.n}</td><td class="l"><b>${esc(s.name)}</b></td>
+      ${DATES.map(d=>`<td>${kmSelect(s.id,d)}</td>`).join("")}<td class="small" data-acc="${s.id}">${fmt(t.km)}km · ${t.cnt}회</td></tr>`}).join("")}
+    </tbody></table></div></div>`;
+}
+function viewAdminTeachers(){
+  return `<div class="card"><h2>선생님 기록 입력</h2>
+    <div class="row"><input type="text" id="tname" placeholder="담임 외 선생님 이름" maxlength="20"><button class="btn" id="addT">추가</button></div>
+    <div class="scroll"><table><thead><tr><th class="l">선생님</th>${DATES.map(d=>`<th>${dLabel(d)}</th>`).join("")}<th>합계</th></tr></thead><tbody>
+    ${teachers().map(t=>{const s=stat(t.id);return `<tr><td class="l"><b>${esc(t.name)}</b> <span class="small">${t.hr?`${t.g}-${t.c} 담임`:`<button class="chip" data-del="${t.id}">삭제</button>`}</span></td>
+      ${DATES.map(d=>`<td>${kmSelect(t.id,d)}</td>`).join("")}<td class="small" data-acc="${t.id}">${fmt(s.km)}km · ${s.cnt}회</td></tr>`}).join("")}
+    </tbody></table></div>
+    <p class="note">담임선생님은 0.5km 이상 기록하면 하루마다 담임 반에 +${HR_BONUS}점 보너스가 들어갑니다. (선생님 본인의 거리는 학급 거리에 더해지지 않습니다.)</p></div>`;
+}
+function viewAdmin(){
+  if(!ui.admOk) return viewLogin();
+  const subs=[["input","학생 기록 입력"],["teacher","선생님 기록 입력"]];
+  return `<div class="sub">${subs.map(([k,t])=>`<button class="pill ${ui.adm===k?"on":""}" data-adm="${k}">${t}</button>`).join("")}<button class="pill" id="logout">로그아웃</button></div>`
+    + (ui.adm==="teacher"?viewAdminTeachers():viewAdminRecords());
+}
+/* ===== 렌더 & 이벤트 ===== */
+const app = document.getElementById("app");
+function render(keepFocus){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===ui.top));
+  const y = window.scrollY;
+  app.innerHTML = ui.top==="rec" ? viewRecordRoom() : viewAdmin();
+  if(keepFocus) window.scrollTo(0,y);
+}
+
+document.querySelector(".tabs").addEventListener("click",e=>{
+  const t=e.target.dataset.t; if(t){ui.top=t;render();}
+});
+app.addEventListener("click",async e=>{
+  const el=e.target.closest("[data-g],[data-c],[data-d],[data-del],[data-adm],button,label"); if(!el) return;
+  const D=el.dataset;
+  if(D.g){ui.g=+D.g;ui.c=1;}
+  else if(D.c) ui.c=+D.c;
+  else if(D.d) ui.date=D.d;
+  else if(D.adm) ui.adm=D.adm;
+  else if(D.del){
+    if(!confirm(`${nameOf(D.del)} 선생님과 기록을 삭제할까요?`)) return;
+    await removeTeacher(D.del);
+  }
+  else if(el.id==="addT"){
+    const inp=document.getElementById("tname"), name=inp.value.trim();
+    if(!name){toast("이름을 입력하세요");return;}
+    await addTeacher(name); toast(`${name} 선생님 추가됨`);
+  }
+  else if(el.id==="login"){
+    if(document.getElementById("pw").value===ADMIN_PW){ui.admOk=true;ss("set","1");}
+    else {toast("비밀번호가 올바르지 않습니다");return;}
+  }
+  else if(el.id==="logout"){ui.admOk=false;ss("del");}
+  else return;
+  render();
+});
+app.addEventListener("change",async e=>{
+  const t=e.target;
+  if(t.classList.contains("km")){
+    const km=+t.value; await setRecord(t.dataset.sid,t.dataset.date,km);
+    t.classList.toggle("has",km>0); toast(km>0?`${nameOf(t.dataset.sid)} ${km.toFixed(1)}km 저장`:"기록 삭제");
+    const s=stat(t.dataset.sid); const acc=app.querySelector(`[data-acc="${t.dataset.sid}"]`);
+    if(acc) acc.textContent=`${fmt(s.km)}km · ${s.cnt}회`;
+  }
+});
+app.addEventListener("input",e=>{
+  if(e.target.id==="q"){ ui.pQ=e.target.value.trim(); 
+    const pos=e.target.selectionStart; render(true); const q=document.getElementById("q"); q.focus(); q.setSelectionRange(pos,pos); }
+});
+app.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.id==="pw") document.getElementById("login").click();
+  if(e.key==="Enter"&&e.target.id==="tname") document.getElementById("addT").click();
+});
+
+setSync(DB_URL?"연결 중…":"● 이 기기에 저장");
+render(); loadRemote();
+if(DB_URL) setInterval(()=>{ if(!document.activeElement||document.activeElement.tagName!=="SELECT") loadRemote(); },20000);
+</script>
+</body>
+</html>
